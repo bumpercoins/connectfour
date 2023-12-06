@@ -1,4 +1,6 @@
-class GameState {
+import { Move } from "./Move";
+
+export class GameState {
 	static numRows = 6;
 	static numCols = 7;
 
@@ -93,6 +95,21 @@ class GameState {
 			}
 		}
 		return GameStatus.DRAWN;
+	}
+
+	applyMove(move: Move) {
+		let r = 0;
+		while(r<GameState.numRows && this.cells[r][move.columnIdx] == Cell.VACANT) {
+			r++;
+		}
+		// outside while 2 things could be true: r could point to 1 past bottom row (meaning empty col) or found first non-vacant cell
+		r--;
+		if (r < 0) {
+			console.log("Should not see this message. Illegal move");
+			throw new Error('Should not see this message. Illegal move');
+			return;
+		}
+		this.cells[r][move.columnIdx] = move.isForP1? Cell.P1OWNED : Cell.P2OWNED;
 	}
 }
 
