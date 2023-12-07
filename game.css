@@ -7,3 +7,18 @@
 	justify-content: space-around;
 	width: 700px;
 }
+
+#GoFirstButton, #GoSecondButton {
+	color: white;
+}
+#GoFirstButton {
+	background-color: red;
+}
+
+#GoSecondButton {
+	background-color: blue;
+}
+
+#canvas {
+	border: 2.5px solid brown;
+}
