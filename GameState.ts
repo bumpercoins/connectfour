@@ -9,6 +9,7 @@ export class GameState {
 
 	constructor() {
 		this.cells = [];
+		this.isP1Turn = true;
 		for(let r=0; r<GameState.numRows; r++) {
 			let row: Cell[] = [];
 			for(let c=0; c<GameState.numCols; c++) {
@@ -98,6 +99,13 @@ export class GameState {
 	}
 
 	applyMove(move: Move) {
+		if (move.isForP1 != this.isP1Turn) {
+			let errMsg: string = "Should not see this message. It is not this player's turn yet."
+			console.log(errMsg);
+			throw new Error(errMsg);
+			return;
+
+		}
 		let r = 0;
 		while(r<GameState.numRows && this.cells[r][move.columnIdx] == Cell.VACANT) {
 			r++;
@@ -110,6 +118,7 @@ export class GameState {
 			return;
 		}
 		this.cells[r][move.columnIdx] = move.isForP1? Cell.P1OWNED : Cell.P2OWNED;
+		this.isP1Turn = !this.isP1Turn;
 	}
 }
 

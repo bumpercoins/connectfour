@@ -41,8 +41,7 @@ export class Drawer {
 
 
 		// draw the non-vacant cells from gameState
-
-
+		console.log(this.gameState);
 	}
 
 }
