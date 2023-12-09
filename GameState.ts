@@ -122,13 +122,13 @@ export class GameState {
 	}
 }
 
-enum Cell {
+export enum Cell {
 	VACANT,
 	P1OWNED,
 	P2OWNED
 }
 
-enum GameStatus {
+export enum GameStatus {
 	ONGOING,
 	P1WON,
 	P2WON,

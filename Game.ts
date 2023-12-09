@@ -47,6 +47,9 @@ let startGame = function() {
 	createHumanInputButtons();
 	document.getElementById("PlayerSelectionWrap").style.display = "none";
 	document.getElementById("GameWrap").style.display = "block";
+	if (!iAmP1) {
+		transitionToBotTurn();
+	}
 	drawer.draw();
 }
 

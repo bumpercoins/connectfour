@@ -1,10 +1,14 @@
 import { GameState } from "./GameState";
+import { Cell } from "./GameState";
 
 export class Drawer {
+	static p1CoinColor = "red";
+	static p2CoinColor = "blue";
         canvas: HTMLCanvasElement;
         context: CanvasRenderingContext2D;
 	gameState: GameState;
 	scaleFactor: number = 100;
+	coinRadius: number = this.scaleFactor/2;
 	width: number = GameState.numCols * this.scaleFactor;
 	height: number = GameState.numRows * this.scaleFactor;
 
@@ -42,6 +46,19 @@ export class Drawer {
 
 		// draw the non-vacant cells from gameState
 		console.log(this.gameState);
+		for(let r=0; r<GameState.numRows; r++) {
+			for(let c=0; c<GameState.numCols; c++) {
+				let cell: Cell = this.gameState.cells[r][c];
+				if (cell == Cell.VACANT) {
+					continue;
+				}
+
+				this.context.fillStyle = (cell == Cell.P1OWNED)? Drawer.p1CoinColor : Drawer.p2CoinColor;
+				this.context.beginPath();
+				this.context.arc(this.scaleFactor * c + this.coinRadius, this.scaleFactor * r + this.coinRadius, this.coinRadius, 0, 2 * Math.PI);
+				this.context.fill();
+			}
+		}
 	}
 
 }
