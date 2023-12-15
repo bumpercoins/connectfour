@@ -1,4 +1,5 @@
 import { GameState } from "./GameState";
+import { GameStatus } from "./GameState";
 import { Move } from "./Move";
 import { Drawer } from "./Drawer";
 
@@ -15,6 +16,7 @@ document.getElementById("GoSecondButton").onclick = function() {
 };
 let gameState: GameState = new GameState();
 let drawer: Drawer = new Drawer(document.getElementById("canvas") as HTMLCanvasElement, gameState);
+let prompt: HTMLElement = document.getElementById("Prompt");
 
 let moveButtonsNode: HTMLElement = document.getElementById("MoveButtons");
 let createHumanInputButtons = function() {
@@ -35,13 +37,47 @@ let createHumanInputButtons = function() {
 				throw new Error('Should not see this message. Button should be disabled and not clickable');
 				return;
 			}
-			gameState.applyMove(new Move(iAmP1, i));
-			drawer.draw();
+			let gameOver: boolean = applyMove(new Move(iAmP1, i));
+			if (gameOver) {
+				return;
+			}
 			transitionToBotTurn();
 		}
 		moveButtonsNode.appendChild(buttonNode);
 	}
 }
+
+// returns True iff Game is Over
+let applyMove = function(move: Move): boolean {
+	gameState.applyMove(move);
+	drawer.draw();
+	let gameOutcomeMessage: string = '';
+	let gameOver: boolean = true;
+	switch (gameState.getGameStatus()) {
+		case GameStatus.ONGOING:
+			gameOver = false;
+			break;
+		case GameStatus.P1WON:
+			gameOutcomeMessage = iAmP1? "You won!" : "The Bot won!";
+			break;
+		case GameStatus.P2WON:
+			gameOutcomeMessage = !iAmP1? "You won!" : "The Bot won!";
+			break;
+		case GameStatus.DRAWN:
+			gameOutcomeMessage = "The game ended in a draw.";
+			break;
+	}
+	if (gameOver) {
+		prompt.innerText = "Game Over. " + gameOutcomeMessage;
+		let childButtons = moveButtonsNode.children;
+		for (let i = 0; i < childButtons.length; i++) {
+			let button: HTMLButtonElement = childButtons[i] as HTMLButtonElement;
+			button.disabled = true;
+		}
+	}
+	return gameOver;
+}
+
 
 let startGame = function() {
 	createHumanInputButtons();
@@ -61,17 +97,13 @@ let transitionToBotTurn = async function() {
 		button.disabled = true;
 	}
 
-	// lets query our Bot's neural network for a move
-
-
-	// TODO have Bot provide a move
+	// TODO lets query our Bot's neural network for a move
+	// For now just random, later extract onto a Bot.ts file
 	let dummyBotMove: Move = new Move(!iAmP1, Math.floor(Math.random() * GameState.numCols));
-
-	gameState.applyMove(dummyBotMove);
-
-
-	drawer.draw();
-
+	let gameOver: boolean = applyMove(dummyBotMove);
+	if (gameOver) {
+		return;
+	}
 	// go back to human turn
 	transitionToHumanTurn();
 }

@@ -75,18 +75,31 @@ export class GameState {
 				scoreToDiagBackward.get(scoreBackward).push(cell);
 			}
 		}
+		let res: GameStatus = GameStatus.ONGOING;
 		scoreToDiagForward.forEach((cellList: Cell[], score: number) => {
-			let res: GameStatus = fourInARowChecker(cellList);
+			if (res != GameStatus.ONGOING) {
+				return;
+			}
+			res = fourInARowChecker(cellList);
 			if (res != GameStatus.ONGOING) {
 				return res;
 			}
 		});
+		if (res != GameStatus.ONGOING) {
+			return res;
+		}
 		scoreToDiagBackward.forEach((cellList: Cell[], score: number) => {
-			let res: GameStatus = fourInARowChecker(cellList);
+			if (res != GameStatus.ONGOING) {
+				return;
+			}
+			res = fourInARowChecker(cellList);
 			if (res != GameStatus.ONGOING) {
 				return res;
 			}
 		});
+		if (res != GameStatus.ONGOING) {
+			return res;
+		}
 		// we know its not GameStatus.P[1,2]WON...need to check for DRAWN
 		// to check for draw, suffices to check the TOP row bc of "gravity" (assumes game state is legal)
 		// that is a coin in top row implies all cells below are populated by coins
