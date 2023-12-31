@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@tensorflow/tfjs": "^4.15.0",
+    "@tensorflow/tfjs-node": "^4.15.0",
+    "@tensorflow/tfjs-node-gpu": "^4.15.0"
+  }
+}
