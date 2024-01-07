@@ -45,7 +45,7 @@ export class Drawer {
 
 
 		// draw the non-vacant cells from gameState
-		console.log(this.gameState);
+		//console.log(this.gameState);
 		for(let r=0; r<GameState.numRows; r++) {
 			for(let c=0; c<GameState.numCols; c++) {
 				let cell: Cell = this.gameState.cells[r][c];

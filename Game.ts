@@ -2,6 +2,7 @@ import { GameState } from "./GameState";
 import { GameStatus } from "./GameState";
 import { Move } from "./Move";
 import { Drawer } from "./Drawer";
+import { Bot } from "./Bot";
 
 console.log("Hello from Game.ts!");
 
@@ -14,6 +15,7 @@ document.getElementById("GoSecondButton").onclick = function() {
 	iAmP1 = false;
 	startGame();
 };
+let bot: Bot;
 let gameState: GameState = new GameState();
 let drawer: Drawer = new Drawer(document.getElementById("canvas") as HTMLCanvasElement, gameState);
 let prompt: HTMLElement = document.getElementById("Prompt");
@@ -83,6 +85,7 @@ let startGame = function() {
 	createHumanInputButtons();
 	document.getElementById("PlayerSelectionWrap").style.display = "none";
 	document.getElementById("GameWrap").style.display = "block";
+	bot = new Bot(!iAmP1);
 	if (!iAmP1) {
 		transitionToBotTurn();
 	}
@@ -97,10 +100,8 @@ let transitionToBotTurn = async function() {
 		button.disabled = true;
 	}
 
-	// TODO lets query our Bot's neural network for a move
-	// For now just random, later extract onto a Bot.ts file
-	let dummyBotMove: Move = new Move(!iAmP1, Math.floor(Math.random() * GameState.numCols));
-	let gameOver: boolean = applyMove(dummyBotMove);
+	let botMove: Move = bot.getMove(gameState);
+	let gameOver: boolean = applyMove(botMove);
 	if (gameOver) {
 		return;
 	}
