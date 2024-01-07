@@ -3,6 +3,7 @@ import { GameStatus } from "./GameState";
 import { Move } from "./Move";
 import { Drawer } from "./Drawer";
 import { Bot } from "./Bot";
+import * as tf from '@tensorflow/tfjs';
 
 console.log("Hello from Game.ts!");
 
@@ -81,11 +82,11 @@ let applyMove = function(move: Move): boolean {
 }
 
 
-let startGame = function() {
+let startGame = async function() {
 	createHumanInputButtons();
 	document.getElementById("PlayerSelectionWrap").style.display = "none";
 	document.getElementById("GameWrap").style.display = "block";
-	bot = new Bot(!iAmP1);
+	bot = new Bot(!iAmP1, await tf.loadLayersModel('./model/model.json'));
 	if (!iAmP1) {
 		transitionToBotTurn();
 	}
