@@ -133,6 +133,19 @@ export class GameState {
 		this.cells[r][move.columnIdx] = move.isForP1? Cell.P1OWNED : Cell.P2OWNED;
 		this.isP1Turn = !this.isP1Turn;
 	}
+
+	getLegalMoves(): Move[] {
+		let moves: Move[] = []
+		//for(let cell of  {
+		for(let c=0; c<GameState.numCols; c++) {
+			let cell = this.cells[0][c];
+			if (cell == Cell.VACANT) {
+				let move: Move = new Move(this.isP1Turn, c);
+				moves.push(move);
+			}
+		}
+		return moves;
+	}
 }
 
 export enum Cell {

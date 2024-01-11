@@ -1,6 +1,8 @@
 import * as tf from '@tensorflow/tfjs';
 import { GameState } from "./GameState";
 import { Cell } from "./GameState";
+import { Policy } from "./Policy";
+import { Move } from "./Move";
 
 export async function createModel() {
 	// TODO check if model exists already. Only if it doesn't exist create a new one
@@ -57,5 +59,21 @@ export function convertGameStateToModelInput(gameState: GameState): tf.Tensor {
 	let inputNCHWTensor = tf.tensor(inputNumberArrayNCHW);
 	let inputNHWCTensor = tf.transpose(inputNCHWTensor, [0, 2, 3, 1]);
 	return inputNHWCTensor;
+}
+
+export function getPolicyAndValue(gameState: GameState, model: tf.LayersModel): [Policy, number] {
+	let input: tf.Tensor = convertGameStateToModelInput(gameState);
+	let prediction = model.predict(input);
+	let policyData: number[] = prediction[0].dataSync();
+	let valueData: number[] = prediction[1].dataSync();
+	
+	// filter out illegal moves
+	let legalMoves: Move[] = gameState.getLegalMoves();
+	let legalMovesWithProbs: [Move, number][] = [];
+	for(let move of legalMoves) {
+		let moveProb: number = policyData[move.columnIdx];
+		legalMovesWithProbs.push([move, moveProb]);
+	}
+	return [new Policy(legalMovesWithProbs), valueData[0]];
 }
 
