@@ -67,13 +67,24 @@ export function getPolicyAndValue(gameState: GameState, model: tf.LayersModel): 
 	let policyData: number[] = prediction[0].dataSync();
 	let valueData: number[] = prediction[1].dataSync();
 	
-	// filter out illegal moves
+	// filter out illegal moves and renomalize
 	let legalMoves: Move[] = gameState.getLegalMoves();
 	let legalMovesWithProbs: [Move, number][] = [];
+	let sumProb: number = 0;
 	for(let move of legalMoves) {
 		let moveProb: number = policyData[move.columnIdx];
+		if (moveProb == 0) {
+			// just to never completely eliminate a possibility, and also to avoid a divide by 0 error if sumProb ends up 0
+			moveProb = 0.001;
+		}
 		legalMovesWithProbs.push([move, moveProb]);
+		sumProb += moveProb;
 	}
+	for(let moveAndProb of legalMovesWithProbs) {
+		// finish the renomalization
+		moveAndProb[1] = moveAndProb[1] / sumProb;
+	}
+
 	return [new Policy(legalMovesWithProbs), valueData[0]];
 }
 
