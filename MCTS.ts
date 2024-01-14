@@ -33,8 +33,11 @@ class MCEdge {
         }
 }
 
-function search(node: MCNode, model: tf.LayersModel) {
+// recursively performs 1 full iteration of MCTS and returns the VALUECONTRIBUTION
+function search(node: MCNode, model: tf.LayersModel): number {
 
+
+	return 0;
 }
 
 
