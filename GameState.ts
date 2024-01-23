@@ -136,7 +136,6 @@ export class GameState {
 
 	getLegalMoves(): Move[] {
 		let moves: Move[] = []
-		//for(let cell of  {
 		for(let c=0; c<GameState.numCols; c++) {
 			let cell = this.cells[0][c];
 			if (cell == Cell.VACANT) {
@@ -145,6 +144,18 @@ export class GameState {
 			}
 		}
 		return moves;
+	}
+
+	clone(): GameState {
+		let copy: GameState = new GameState();
+		for(let r=0; r<GameState.numRows; r++) {
+			let row: Cell[] = [];
+			for(let c=0; c<GameState.numCols; c++) {
+				row.push(this.cells[r][c]);
+			}
+			copy.cells.push(row);
+		}
+		return copy;
 	}
 }
 
