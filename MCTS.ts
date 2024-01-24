@@ -6,7 +6,7 @@ import { Move } from "./Move";
 import * as tf from '@tensorflow/tfjs-node-gpu';
 import { getPolicyAndValue } from "./Net";
 
-let numMCTSSims: number = 1800;
+let numMCTSSims: number = 100;
 let cPuct: number = 1;
 
 class MCNode {
