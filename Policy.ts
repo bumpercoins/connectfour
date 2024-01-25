@@ -8,4 +8,13 @@ export class Policy {
 		movesAndProbabilities.sort(function(a, b){return b[1] - a[1]});
 		this.movesAndProbabilities = movesAndProbabilities;
         }
+
+	clone(): Policy {
+		let copyMovesAndProbabilities: [Move, number][] = [];
+		for(let moveAndProb of this.movesAndProbabilities) {
+			copyMovesAndProbabilities.push([moveAndProb[0].clone(), moveAndProb[1]]);
+		}
+		return new Policy(copyMovesAndProbabilities);
+	}
+
 }
