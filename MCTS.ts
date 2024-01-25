@@ -117,23 +117,19 @@ function createNode(gameState: GameState, model: tf.LayersModel): [MCNode, numbe
 	return [new MCNode(gameState, edges), -1 * value];
 }
 
-/*
 
 // takes in the gameState and returns an MCTS-IMPROVED policy
-// creates the
 function doMCTS(gameState: GameState, model: tf.LayersModel): Policy {
-	root: MCNode = createNode(gameState, model)[0];
+	let root: MCNode = createNode(gameState, model)[0];
 	for(let i=0; i<numMCTSSims; i++) {
 		search(root, model);
 	}
 	// use the root and the edge weights to create an improved policy (so look at the edge's numvisits and normalize over them)
 	// then return this policy
+	let movesAndProbabilities: [Move, number][] = [];
+	for(let edge of root.edges) {
+		// root.numVisits == numMCTSSims == denom for normalization
+		movesAndProbabilities.push([edge.move, edge.numVisits/numMCTSSims]);
+	}
+	return new Policy(movesAndProbabilities);
 }
-
-
-
-
-
-
-
-*/
