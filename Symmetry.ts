@@ -40,25 +40,22 @@ const flipGameStateHorizontally: (s: GameState) => GameState = function(gs: Game
 	for(let r=0; r<GameState.numRows; r++) {
 		let row: Cell[] = [];
 		for(let c=0; c<GameState.numCols; c++) {
-			row.push(gs.cells[r][GameState.numCols - 1 - c]);
+			row.push(gs.cells[r][horizontallyFlipColumnIndex(c)]);
 		}
 		flippedGameState.cells.push(row);
 	}
 	return flippedGameState;
 }
 
+const horizontallyFlipColumnIndex: (c: number) => number = function(c: number): number {
+	return GameState.numCols - 1 - c;
+}
+
 const flipPolicyHorizontally: (p: Policy) => Policy = function(p: Policy): Policy {
 	//movesAndProbabilities: [Move, number][];
 	let copyP: Policy = p.clone();
-	let size: number = copyP.movesAndProbabilities.length;
-	let start: number = 0;
-	let end: number = size - 1;
-	while(start < end) {
-		let tmp: [Move, number] = copyP.movesAndProbabilities[start];
-		copyP.movesAndProbabilities[start] = copyP.movesAndProbabilities[end];
-		copyP.movesAndProbabilities[end] = tmp;
-		start++;
-		end--;
+	for(let moveAndProb of copyP.movesAndProbabilities) {
+		moveAndProb[0].columnIdx = horizontallyFlipColumnIndex(moveAndProb[0].columnIdx);
 	}
 	return copyP;
 }
