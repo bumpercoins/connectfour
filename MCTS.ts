@@ -5,6 +5,8 @@ import { Policy } from "./Policy";
 import { Move } from "./Move";
 import * as tf from '@tensorflow/tfjs-node-gpu';
 import { getPolicyAndValue } from "./Net";
+import { Symmetry } from "./Symmetry";
+import { symmetries } from "./Symmetry";
 
 let numMCTSSims: number = 100;
 let cPuct: number = 1;
@@ -105,9 +107,10 @@ function createNode(gameState: GameState, model: tf.LayersModel): [MCNode, numbe
 		let terminalNode: MCNode = new MCNode(gameState, [], true, terminalValue);
 		return [terminalNode, terminalValue]
 	}
-	let policyAndValue: [Policy, number] = getPolicyAndValue(gameState, this.model);
-	let policy: Policy = policyAndValue[0];
-	let value: number = policyAndValue[1];
+	let symmetry: Symmetry = symmetries[Math.floor(Math.random() * symmetries.length)];
+	let policyAndValueForSymmetricState: [Policy, number] = getPolicyAndValue(symmetry.transformGameState(gameState), this.model);
+	let policy: Policy = symmetry.transformInversePolicy(policyAndValueForSymmetricState[0]);
+	let value: number = policyAndValueForSymmetricState[1];
 	let edges: MCEdge[] = [];
 	for(let moveAndProb of policy.movesAndProbabilities) {
 		let move: Move = moveAndProb[0];
