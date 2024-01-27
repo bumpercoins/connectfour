@@ -122,7 +122,7 @@ function createNode(gameState: GameState, model: tf.LayersModel): [MCNode, numbe
 
 
 // takes in the gameState and returns an MCTS-IMPROVED policy
-function doMCTS(gameState: GameState, model: tf.LayersModel): Policy {
+export function doMCTS(gameState: GameState, model: tf.LayersModel): Policy {
 	let root: MCNode = createNode(gameState, model)[0];
 	for(let i=0; i<numMCTSSims; i++) {
 		search(root, model);

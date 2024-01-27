@@ -18,7 +18,8 @@ export class Bot {
 
 		//let dummyBotMove: Move = new Move(this.isP1Bot, Math.floor(Math.random() * GameState.numCols));
 		//return dummyBotMove;
-		return policy.movesAndProbabilities[0][0];
+		//return policy.movesAndProbabilities[0][0];
+		return policy.getHighestProbMove();
 	}
 
 
