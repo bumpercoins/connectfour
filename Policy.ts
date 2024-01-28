@@ -39,8 +39,15 @@ export class Policy {
 
 	// samples a move respecting the moves' probs
 	sampleMove(): Move {
-		// TODO, implement this. see https://leetcode.com/problems/random-pick-with-weight/
-		return new Move(false, -1);
+		let rand: number = Math.random();
+		let sum: number = 0;
+		let i: number = 0;
+		while(i < this.movesAndProbabilities.length && rand >= sum + this.movesAndProbabilities[i][1]) {
+			sum = sum + this.movesAndProbabilities[i][1];
+			i++;
+		}
+		i = Math.min(i, this.movesAndProbabilities.length - 1);
+		return this.movesAndProbabilities[i][0];
 	}
 
 }
