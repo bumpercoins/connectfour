@@ -4,6 +4,9 @@ import { Cell } from "./GameState";
 import { Policy } from "./Policy";
 import { Move } from "./Move";
 
+// This type is a named tuple that represents a training sample in the form [state, policy, reward]
+export type Example = [GameState, Policy, number]
+
 export async function createModel() {
 	// TODO check if model exists already. Only if it doesn't exist create a new one
 
@@ -13,7 +16,7 @@ export async function createModel() {
 	const flat = tf.layers.flatten({}).apply(conv2);
 	const dense1 = tf.layers.dense({units: 16, activation: 'tanh'}).apply(flat);
 	const policyOutput = tf.layers.dense({units: GameState.numCols, activation: 'softmax'}).apply(dense1);
-	const valueOutput = tf.layers.dense({units: 1, activation: 'relu'}).apply(dense1);
+	const valueOutput = tf.layers.dense({units: 1, activation: 'tanh'}).apply(dense1);
 	const model = tf.model({inputs: input, outputs: [policyOutput as tf.SymbolicTensor, valueOutput as tf.SymbolicTensor]});
 	//model.summary();
 
@@ -30,7 +33,7 @@ export async function createModel() {
 //createModel();
 
 // this function uses gameState.isP1Turn and returns input from perspective of player whose turn it is
-export function convertGameStateToModelInput(gameState: GameState): tf.Tensor {
+function convertGameStateToModelInput(gameState: GameState): tf.Tensor {
 	let currentPlayerCells: number[][] = [];
 	let otherPlayerCells: number[][] = [];
 	for(let r=0; r<GameState.numRows; r++) {
@@ -59,6 +62,17 @@ export function convertGameStateToModelInput(gameState: GameState): tf.Tensor {
 	let inputNCHWTensor = tf.tensor(inputNumberArrayNCHW);
 	let inputNHWCTensor = tf.transpose(inputNCHWTensor, [0, 2, 3, 1]);
 	return inputNHWCTensor;
+}
+
+function convertPolicyToTensor(policy: Policy): tf.Tensor {
+	let policyData: number[] = [];
+	for(let i=0; i<GameState.numCols; i++) {
+		policyData.push(0);
+	}
+	for(let moveAndProb of policy.movesAndProbabilities) {
+		policyData[moveAndProb[0].columnIdx] = moveAndProb[1];
+	}
+	return tf.tensor(policyData, [GameState.numCols]);
 }
 
 export function getPolicyAndValue(gameState: GameState, model: tf.LayersModel): [Policy, number] {
@@ -91,3 +105,24 @@ export function getPolicyAndValue(gameState: GameState, model: tf.LayersModel): 
 	return [new Policy(legalMovesWithProbs), valueData[0]];
 }
 
+// Given training examples, train the model
+// export type Example = [GameState, Policy, number]
+export async function trainModel(model: tf.LayersModel, examples: Example[]) {
+	//let input: tf.Tensor = convertGameStateToModelInput(gameState);
+	let numExamples: number = examples.length;
+	let xsArray: tf.Tensor[] = [];
+	let ys1Array: tf.Tensor[] = [];
+	let ys2Array: tf.Tensor[] = [];
+
+	for(let example of examples) {
+		xsArray.push(convertGameStateToModelInput(example[0]));
+		ys1Array.push(convertPolicyToTensor(example[1]));
+		ys2Array.push(tf.tensor([example[2]]));
+	}
+	let xs: tf.Tensor = tf.concat(xsArray);
+	let ys1: tf.Tensor = tf.stack(ys1Array);
+	let ys2: tf.Tensor = tf.stack(ys2Array);
+
+	let history = await model.fit(xs, [ys1, ys2]);
+	console.log(history.history)
+}
