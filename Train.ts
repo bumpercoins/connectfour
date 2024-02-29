@@ -16,7 +16,7 @@ let numGamesPerIteration: number = 1;
 
 // executes AlphaZero algorithm, the entry point
 async function train() {
-	let model: tf.LayersModel = await tf.loadLayersModel('./model/model.json');
+	let model: tf.LayersModel = await tf.loadLayersModel('file://./model/model.json');
 	for(let i=0; i<numIterations; i++) {
 		let examples: Example[] = [];
 		for(let j=0; j<numGamesPerIteration; j++) {

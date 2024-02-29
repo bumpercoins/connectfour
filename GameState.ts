@@ -148,6 +148,7 @@ export class GameState {
 
 	clone(): GameState {
 		let copy: GameState = new GameState();
+		copy.cells = [];
 		copy.isP1Turn = this.isP1Turn;
 		for(let r=0; r<GameState.numRows; r++) {
 			let row: Cell[] = [];

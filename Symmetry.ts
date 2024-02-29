@@ -36,7 +36,8 @@ const identity: Symmetry = new Symmetry((gs: GameState) => gs.clone(), (p: Polic
 
 const flipGameStateHorizontally: (s: GameState) => GameState = function(gs: GameState): GameState {
 	let flippedGameState: GameState = new GameState();
-	flippedGameState.isP1Turn = flippedGameState.isP1Turn;
+	flippedGameState.cells = [];
+	flippedGameState.isP1Turn = gs.isP1Turn;
 	for(let r=0; r<GameState.numRows; r++) {
 		let row: Cell[] = [];
 		for(let c=0; c<GameState.numCols; c++) {

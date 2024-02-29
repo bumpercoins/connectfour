@@ -57,7 +57,7 @@ function search(node: MCNode, model: tf.LayersModel): number {
 		return -1 * node.terminalValue;
 	}
 	let bestEdges: MCEdge[] = [node.edges[0]];
-	let bestEdgeScore: number = Number.MIN_VALUE;
+	let bestEdgeScore: number = Number.NEGATIVE_INFINITY;
 	for(let edge of node.edges) {
 		let score: number = edge.getQScore() + cPuct*edge.prob*Math.sqrt(node.numVisits)/(1 + edge.numVisits);
 		if (score >= bestEdgeScore) {
@@ -105,10 +105,10 @@ function createNode(gameState: GameState, model: tf.LayersModel): [MCNode, numbe
 				break;
 		}
 		let terminalNode: MCNode = new MCNode(gameState, [], true, terminalValue);
-		return [terminalNode, terminalValue]
+		return [terminalNode, -1 * terminalValue]
 	}
 	let symmetry: Symmetry = symmetries[Math.floor(Math.random() * symmetries.length)];
-	let policyAndValueForSymmetricState: [Policy, number] = getPolicyAndValue(symmetry.transformGameState(gameState), this.model);
+	let policyAndValueForSymmetricState: [Policy, number] = getPolicyAndValue(symmetry.transformGameState(gameState), model);
 	let policy: Policy = symmetry.transformInversePolicy(policyAndValueForSymmetricState[0]);
 	let value: number = policyAndValueForSymmetricState[1];
 	let edges: MCEdge[] = [];
