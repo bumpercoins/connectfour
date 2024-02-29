@@ -12,7 +12,7 @@ import { symmetries } from "./Symmetry";
 
 
 let numIterations: number = 5;
-let numGamesPerIteration: number = 100;
+let numGamesPerIteration: number = 10;
 
 // executes AlphaZero algorithm, the entry point
 async function train() {
@@ -41,6 +41,7 @@ async function train() {
 
 		await trainModel(model, examples);
 		await model.save('file://./model');
+		console.log(i);
 	}
 }
 train();

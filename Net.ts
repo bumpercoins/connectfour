@@ -124,5 +124,5 @@ export async function trainModel(model: tf.LayersModel, examples: Example[]) {
 	let ys2: tf.Tensor = tf.stack(ys2Array);
 
 	let history = await model.fit(xs, [ys1, ys2]);
-	console.log(history.history)
+	//console.log(history.history)
 }
