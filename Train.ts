@@ -11,8 +11,8 @@ import { trainModel } from "./Net";
 import { symmetries } from "./Symmetry";
 
 
-let numIterations: number = 1;
-let numGamesPerIteration: number = 1;
+let numIterations: number = 5;
+let numGamesPerIteration: number = 100;
 
 // executes AlphaZero algorithm, the entry point
 async function train() {
@@ -32,6 +32,13 @@ async function train() {
 				}
 			}
 		}
+
+		model.compile({
+			optimizer: 'sgd',
+			loss: ['categoricalCrossentropy', 'meanSquaredError'],
+			metrics: ['accuracy']
+		});
+
 		await trainModel(model, examples);
 		await model.save('file://./model');
 	}
