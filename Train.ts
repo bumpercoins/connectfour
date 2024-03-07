@@ -11,8 +11,8 @@ import { trainModel } from "./Net";
 import { symmetries } from "./Symmetry";
 
 
-let numIterations: number = 5;
-let numGamesPerIteration: number = 10;
+let numIterations: number = 1;
+let numGamesPerIteration: number = 200;
 
 // executes AlphaZero algorithm, the entry point
 async function train() {

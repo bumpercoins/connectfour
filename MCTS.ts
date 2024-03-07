@@ -8,8 +8,8 @@ import { getPolicyAndValue } from "./Net";
 import { Symmetry } from "./Symmetry";
 import { symmetries } from "./Symmetry";
 
-let numMCTSSims: number = 100;
-let cPuct: number = 1;
+let numMCTSSims: number = 1000;
+let cPuct: number = 3;
 
 class MCNode {
 	gameState: GameState;

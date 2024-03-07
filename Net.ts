@@ -11,12 +11,13 @@ export async function createModel() {
 	// TODO check if model exists already. Only if it doesn't exist create a new one
 
 	const input = tf.input({shape: [GameState.numRows, GameState.numCols, 2]})
-	const conv1 = tf.layers.conv2d({kernelSize: 3, filters: 8, activation: 'relu'}).apply(input);
-	const conv2 = tf.layers.conv2d({kernelSize: 3, filters: 8, activation: 'relu'}).apply(conv1);
+	const conv1 = tf.layers.conv2d({kernelSize: 3, filters: 256, activation: 'relu'}).apply(input);
+	const conv2 = tf.layers.conv2d({kernelSize: 3, filters: 256, activation: 'relu'}).apply(conv1);
 	const flat = tf.layers.flatten({}).apply(conv2);
-	const dense1 = tf.layers.dense({units: 16, activation: 'tanh'}).apply(flat);
-	const policyOutput = tf.layers.dense({units: GameState.numCols, activation: 'softmax'}).apply(dense1);
-	const valueOutput = tf.layers.dense({units: 1, activation: 'tanh'}).apply(dense1);
+	const dense1 = tf.layers.dense({units: 1024, activation: 'tanh'}).apply(flat);
+	const dense2 = tf.layers.dense({units: 512, activation: 'tanh'}).apply(dense1);
+	const policyOutput = tf.layers.dense({units: GameState.numCols, activation: 'softmax'}).apply(dense2);
+	const valueOutput = tf.layers.dense({units: 1, activation: 'tanh'}).apply(dense2);
 	const model = tf.model({inputs: input, outputs: [policyOutput as tf.SymbolicTensor, valueOutput as tf.SymbolicTensor]});
 	//model.summary();
 
