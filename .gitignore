@@ -1,3 +1,4 @@
 *.js
+!min.js
 *.js.map
 node_modules
