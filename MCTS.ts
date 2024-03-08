@@ -8,6 +8,7 @@ import { getPolicyAndValue } from "./Net";
 import { Symmetry } from "./Symmetry";
 import { symmetries } from "./Symmetry";
 
+// TODO export this and use in Bot.ts
 let numMCTSSims: number = 1000;
 let cPuct: number = 3;
 
@@ -122,9 +123,9 @@ function createNode(gameState: GameState, model: tf.LayersModel): [MCNode, numbe
 
 
 // takes in the gameState and returns an MCTS-IMPROVED policy
-export function doMCTS(gameState: GameState, model: tf.LayersModel): Policy {
+export function doMCTS(gameState: GameState, model: tf.LayersModel, numMCTSSimsOptional = numMCTSSims): Policy {
 	let root: MCNode = createNode(gameState, model)[0];
-	for(let i=0; i<numMCTSSims; i++) {
+	for(let i=0; i<numMCTSSimsOptional; i++) {
 		search(root, model);
 	}
 	// use the root and the edge weights to create an improved policy (so look at the edge's numvisits and normalize over them)
@@ -132,7 +133,7 @@ export function doMCTS(gameState: GameState, model: tf.LayersModel): Policy {
 	let movesAndProbabilities: [Move, number][] = [];
 	for(let edge of root.edges) {
 		// root.numVisits == numMCTSSims == denom for normalization
-		movesAndProbabilities.push([edge.move, edge.numVisits/numMCTSSims]);
+		movesAndProbabilities.push([edge.move, edge.numVisits/numMCTSSimsOptional]);
 	}
 	return new Policy(movesAndProbabilities);
 }

@@ -87,6 +87,11 @@ let startGame = async function() {
 	document.getElementById("PlayerSelectionWrap").style.display = "none";
 	document.getElementById("GameWrap").style.display = "block";
 	bot = new Bot(!iAmP1, await tf.loadLayersModel('./model/model.json'));
+	let numMCTSSimsInput: HTMLInputElement = document.getElementById("numMCTSSims") as HTMLInputElement;
+	bot.numMCTSSims = parseInt(numMCTSSimsInput.value? numMCTSSimsInput.value : '1000'); // initially bind to default value and if none, default to 1000
+	numMCTSSimsInput.addEventListener('change', function() {
+		bot.numMCTSSims = parseInt(this.value);
+	});
 	if (!iAmP1) {
 		transitionToBotTurn();
 	}

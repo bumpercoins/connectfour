@@ -7,6 +7,8 @@ import { doMCTS } from "./MCTS";
 export class Bot {
 	isP1Bot: boolean;
 	model: tf.LayersModel;
+	// TODO import this 1000 constant from MCTS.ts
+	numMCTSSims: number = 1000;
 	
         constructor(isP1Bot: boolean, model: tf.LayersModel) {
                 this.isP1Bot = isP1Bot;
@@ -14,8 +16,7 @@ export class Bot {
         }
 	
 	getMove(gameState: GameState): Move {
-		//let policy: Policy =  getPolicyAndValue(gameState, this.model)[0];
-		let policy: Policy = doMCTS(gameState, this.model);
+		let policy: Policy = doMCTS(gameState, this.model, this.numMCTSSims);
 
 		//let dummyBotMove: Move = new Move(this.isP1Bot, Math.floor(Math.random() * GameState.numCols));
 		//return dummyBotMove;
