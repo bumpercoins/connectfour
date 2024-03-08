@@ -3,6 +3,8 @@ It uses TensorFlowJS both to train and run the bot's neural net. The net is a ve
 
 I trained it for a week to the the current model on my MacBookAir.
 
+To view this project in action hosted by GitHub Pages, visit https://bumpercoins.github.io/connectfour/ and play the Bot!
+
 If you wish to train your own Connect Four bot from scratch, here's what you'll need to do:
 Preconditions: you have the TypeScript comipler (tsc) installed and you have Node installed
 1) Run npm install to instal tensorflowJS locally
