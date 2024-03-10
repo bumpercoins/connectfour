@@ -20,6 +20,7 @@ let bot: Bot;
 let gameState: GameState = new GameState();
 let drawer: Drawer = new Drawer(document.getElementById("canvas") as HTMLCanvasElement, gameState);
 let prompt: HTMLElement = document.getElementById("Prompt");
+let defaultNumMCTSSims: number = 10;
 
 let moveButtonsNode: HTMLElement = document.getElementById("MoveButtons");
 let createHumanInputButtons = function() {
@@ -88,7 +89,7 @@ let startGame = async function() {
 	document.getElementById("GameWrap").style.display = "block";
 	bot = new Bot(!iAmP1, await tf.loadLayersModel('./model/model.json'));
 	let numMCTSSimsInput: HTMLInputElement = document.getElementById("numMCTSSims") as HTMLInputElement;
-	bot.numMCTSSims = parseInt(numMCTSSimsInput.value? numMCTSSimsInput.value : '1000'); // initially bind to default value and if none, default to 1000
+	bot.numMCTSSims = numMCTSSimsInput.value? parseInt(numMCTSSimsInput.value): defaultNumMCTSSims;
 	numMCTSSimsInput.addEventListener('change', function() {
 		bot.numMCTSSims = parseInt(this.value);
 	});
