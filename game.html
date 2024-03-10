@@ -18,7 +18,7 @@
 			<canvas id="canvas" width=700 height=600></canvas>
 			<p>Bot Settings:</p>
 			<label for="numMCTSSims">Number Of MCTS Simulations:</label>
-			<input type="number" id="numMCTSSims" placeholder="1000" name="numMCTSSims" min="1">
+			<input type="number" id="numMCTSSims" placeholder="10" name="numMCTSSims" min="1">
 			<p>The number Of MCTS(Monte Carlo Tree Search) Simulations esentially controls the Bot strength. The minimum number is 1 and there is no maximum number. I set the default at 1000 because that's the setting that the Bot used when it "learned" to play via the AlphaZero self-play training process.</p>
 
 <p>A nice property of MCTS is that the time it takes to execute roughly scales <strong>linearly</strong> with the number of MCTS Simulations. You can consider this analogous to the depth paramter in traditional alpha beta minimax tree search in that it controlls how "deep" you explore. However with  minimax tree search, the time it takes scales <strong>exponentially</strong> with the depth parameter.
